@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cookbook</title>
+    <style>
+      body, html {
+              height: 100%;
+              margin: 0;
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              overflow: auto;
+          }
+          .bg {
+              height: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              position: relative;
+          }
+
+          nav {
+              display: flex;
+              flex-wrap: wrap;
+              width: 100%;
+              background-color: rgba(255, 0, 0, 0.8);
+              border-radius: 10px;
+              padding: 10px;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+          }
+
+          nav a {
+              text-decoration: none;
+              display: block;
+              text-align: center;
+              padding: 15px 25px;
+              color: #464141;
+              margin: 5px;
+              font-weight: 500;
+              border-radius: 5px;
+              transition: background-color 0.3s ease;
+          }
+
+          nav a:last-child {
+              margin-left: auto;
+          }
+
+          nav a:hover {
+              background-color: #777777;
+              color: #ffffff;
+          }
+          table {
+              width: 50%;
+              border-collapse: collapse;
+              margin: 20px auto;
+              background-color: white;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          }
+          th, td {
+              border: 1px solid #ddd;
+              padding: 8px;
+              text-align: left;
+          }
+          th {
+              background-color: rgba(255, 0, 0, 0.8);
+              color: white;
+          }
+          tr:nth-child(even) {background-color: #f2f2f2;}
+          .link-button {
+              padding: 10px 15px;
+              background-color: rgba(255, 0, 0, 0.8);
+              color: white;
+              text-align: center;
+              text-decoration: none;
+              border-radius: 5px;
+              font-weight: 500;
+              transition: background-color 0.3s ease;
+              display: inline-block;
+              align-content: center;
+          }
+
+          .link-button:hover {
+              background-color: #777777;
+          }
+
+          .container {
+            display: flex;
+            justify-content: center;
+          }
+
+      </style>
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/home">Home</a>
+      <a href="/recipes">Recipes</a>
+      <a href="/ingredients">Ingredients</a>
+      <a href="/cookbook">Cookbook</a>
+      <a href="/settings">Account Settings</a>
+      <a href="/add_recipe">Create Recipe</a>
+      <a href="/logout"">Logout</a>
+    </nav>
+    <body>
+      {% if cookbooks|length > 0 %}
+          <table border="1">
+          <tr><td></td><td><strong>Name</strong></td>
+            {% for cookbook in cookbooks %}
+                <tr><td>
+                  <form action="{{ url_for('cookbook') }}" method="post">
+                    <input type="hidden" name="step" value="view_cookbook">
+                    <input type="hidden" name="postid" value="{{cookbook.cookbook_id}}">
+                    <input type="submit" value="View">
+                  </form>
+                  <form action="{{ url_for('delete_cookbook') }}" method="post">
+                    <input type="hidden" name="cookbook_id" value="{{cookbook.cookbook_id}}">
+                    <input type="submit" value="Delete">
+                  </form></td>
+                <td>{{ cookbook.cookbook_name }}</td></tr>
+            {% endfor %}
+        </table>
+          
+      <div class="container">
+      <a href="{{url_for('create_cookbook')}}" class="link-button"">Create more cookbooks</a>
+      </div>
+      
+      {% elif step == 'view_cookbook' %}
+        <h1 style="text-align: center;">{{cookbook.cookbook_name}}</h1>
+      
+        {% if entries|length > 0 %}          
+            <table border="1">
+              <tr><td></td><td><strong>Name</strong></td>
+                {% for entry in entries %}
+                  <tr><td>
+                    <form action="{{ url_for('cookbook') }}" method="post">
+                      <input type="hidden" name="step" value="view_recipe">
+                      <input type="hidden" name="postid" value="{{entry.recipe_id}}">
+                      <input type="submit" value="View Recipe">
+                    </form>
+                    <form action="{{ url_for('delete_recipe_from_cookbook') }}" method="post">
+                      <input type="hidden" name="recipe_id" value="{{entry.recipe_id}}">
+                      <input type="hidden" name="cookbook_id" value="{{cookbook.cookbook_id}}">
+                      <input type="submit" value="Delete">
+                    </form>
+                  </td><td>{{ entry.name }}</td></tr>
+                {% endfor %}
+            </table>
+      {% else %}
+          <p style="color: #464141; font-size: 20px;">No recipes found.</p>
+          <p style="color: #464141; font-size: 20px;""> Why don't you add some <a href="{{url_for('recipes')}}" style="color: red;">recipes</a>?</p>
+      {% endif %}
+      {% else %}
+          <p style="color: #464141; font-size: 20px;">You don't have any cookbooks yet.</p>
+          <p style="color: #464141; font-size: 20px;">Why don't you create <a href="{{url_for('create_cookbook')}}" style="color: red;">one</a>?</p>
+      {% endif %}
+    </body>
+  </body>
+</html>

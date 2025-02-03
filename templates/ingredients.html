@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ingredients</title>
+    <style>
+      body, html {
+          min-height: 100%;
+          margin: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #f4f4f4;
+          color: #333;
+          overflow: auto;
+      }
+      .bg {
+          min-height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+      }
+
+      nav {
+          display: flex;
+          flex-wrap: wrap;
+          width: 100%;
+          background-color: rgba(255, 0, 0, 0.8);
+          border-radius: 10px;
+          padding: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+
+      nav a {
+          text-decoration: none;
+          display: block;
+          text-align: center;
+          padding: 15px 25px;
+          color: #464141;
+          margin: 5px;
+          font-weight: 500;
+          border-radius: 5px;
+          transition: background-color 0.3s ease;
+      }
+
+      nav a:last-child {
+          margin-left: auto;
+      }
+
+      nav a:hover {
+          background-color: #777777;
+          color: #ffffff;
+      }
+      .search-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 20px;
+      }
+      .search-form {
+          display: flex;
+          align-items: center;
+      }
+
+      .search-form input[type="text"] {
+          padding: 10px;
+          font-size: 16px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          width: 300px;
+      }
+
+      .search-form button {
+          padding: 10px 20px;
+          font-size: 16px;
+          background-color: red;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          margin-left: 10px;
+          cursor: pointer;
+      }
+
+      .search-form button:hover {
+          background-color: #777777;
+      }
+
+      table {
+          width: 50%;
+          border-collapse: collapse;
+          margin: 20px auto;
+          background-color: white;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: left;
+      }
+      th {
+          background-color: rgba(255, 0, 0, 0.8);
+          color: white;
+      }
+      tr:nth-child(even) {background-color: #f2f2f2;}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('.search-form').submit(function(event) {
+          event.preventDefault();
+          var searchQuery = $('input[name="search"]').val();
+
+          $.ajax({
+            url: '/ingredients',
+            method: 'POST',
+            data: { search: searchQuery, ajax: true },
+            success: function(response) {
+              $('.search-results').html(response);
+            },
+            error: function(xhr, status, error) {
+              console.log('Error:', error);
+              $('.search-results').html('<p>An error occurred. Please try again.</p>');
+            }
+          });
+        });
+
+        // Delegate the click event handler to the .search-results container
+        $('.search-results').on('submit', 'form', function(event) {
+          event.preventDefault();
+          var form = $(this);
+          var url = form.attr('action');
+          var data = form.serialize();
+
+          $.ajax({
+            url: url,
+            method: 'POST',
+            data: data,
+            success: function(response) {
+              $('body').html(response);
+            },
+            error: function(xhr, status, error) {
+              console.log('Error:', error);
+            }
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <nav>
+      <a href="/home">Home</a>
+      <a href="/recipes">Recipes</a>
+      <a href="/ingredients">Ingredients</a>
+      <a href="/cookbook">Cookbook</a>
+      <a href="/settings">Account Settings</a>
+      <a href="/add_recipe">Create Recipe</a>
+      <a href="/logout">Logout</a>
+    </nav>
+
+    {% if step == 'display_ingredients' %}
+    <div class="search-container"">
+    <form class="search-form">
+      <input type="text" name="search" value="{{ search_query }}" placeholder="Search ingredients...">
+      <button type="submit">Search</button>
+    </form>
+      </div>
+    {% endif %}
+
+      <div class="search-results">
+        {% if step == 'display_ingredients' %}
+          <table border="1">
+            <tr>
+              <td><strong>Action</strong></td>
+              <td><strong>Name</strong></td>
+            </tr>
+            {% for ingredient in ingredients %}
+              <tr>
+                <td>
+                  <form action="{{ url_for('ingredients') }}" method="post">
+                    <input type="hidden" name="postid" value="{{ingredient.ingredient_id}}">
+                    <input type="hidden" name="step" value="view_ingredient">
+                    <input type="submit" value="View Ingredient">
+                  </form>
+                </td>
+                <td>{{ ingredient.ingredient_name }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+
+      {% elif step == 'view_ingredient' %}
+        <h1 style="text-align: center"> {{ ingredient.ingredient_name }} </h1>
+          <body>
+            <table border="1">
+              <tr>
+                <th>Serving Size (g)</th>
+                <td>{{ ingredient.serving_size_g }}</td>
+              </tr>
+              
+              <tr>
+                <th>Calories</th>
+                <td>{{ ingredient.calories }}</td>
+              </tr>
+              
+              <tr>
+                <th>Total Fat (g)</th>
+                <td>{{ ingredient.total_fat_g }}</td>
+              </tr>
+
+              <tr>
+                <th>Saturated Fat (g)</th>
+                <td>{{ ingredient.saturated_fat_g }}</td>
+              </tr>
+
+              <tr>
+                <th>Cholesterol (mg)</th>
+                <td>{{ ingredient.cholesterol_mg }}</td>
+              </tr>
+              
+              <tr>
+                <th>Sodium (mg)</th>
+                <td>{{ ingredient.sodium_mg }}</td>
+              </tr>
+
+              <tr>
+                <th>Carbs (g)</th>
+                <td>{{ ingredient.carbs_g }}</td>
+              </tr>
+
+              <tr>
+                <th>Fiber (g)</th>
+                <td>{{ ingredient.fiber_g }}</td>
+              </tr>
+
+              <tr>
+                <th>Sugars (g)</th>
+                <td>{{ ingredient.sugars_g }}</td>
+              </tr>
+
+              <tr>
+                <th>Protein (g)</th>
+                <td>{{ ingredient.protein_g }}</td>
+              </tr>
+            
+            </table>
+          </body>
+      {% endif %}
+  </body>
+</html>

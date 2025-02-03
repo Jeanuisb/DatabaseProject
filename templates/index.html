@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome Page</title>
+    <style>
+      body, html {
+        background:url(https://images.pexels.com/photos/1640773/pexels-photo-1640773.jpeg?cs=srgb&dl=pexels-ella-olsson-572949-1640773.jpg&fm=jpg) fixed center/cover no-repeat;
+          height: 100vh;
+          margin: 0;
+          display: flex;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .container {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 50px;
+      }
+
+      .title-box {
+          background-color: rgba(255, 255, 255, 0.8);
+          padding: 20px;
+          border-radius: 10px;
+          margin-bottom: 20px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .button {
+          display: inline-block;
+          background-color: #b30000;
+          color: #fff;
+          text-decoration: none;
+          padding: 15px 30px;
+          border-radius: 5px;
+          margin: 10px; 
+          transition: background-color 0.3s ease;
+      }
+
+      .button:hover {
+          background-color: #0056b3;
+      }
+
+    </style>
+  </head>
+  <body>
+      <div class="container">
+        <div class="title-box">
+            <h1>Welcome to Our Recipe Website</h1>
+        </div>
+        <div class="options">
+          <a href="/login" class="button">Login</a>
+          <a href="/register" class="button">Create an Account</a>
+        </div>
+      </div>
+  </body>
+</html>

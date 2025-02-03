@@ -1,0 +1,65 @@
+<table border="1">
+  {% if step == 'display_recipes' %}
+    <table border="1">
+      <tr>
+        <td><strong>Action</strong></td>
+        <td><strong>Name</strong></td>
+      </tr>
+      {% for recipe in recipes %}
+          <tr>
+            <td>
+              <form action="{{ url_for('recipes') }}" method="post">
+                <input type="hidden" name="step" value="view_recipe">
+                <input type="hidden" name="postid" value="{{recipe.recipe_id}}">
+                <input type="submit" value="View Recipe">
+              </form>
+            </td>
+            <td>{{ recipe.name }}</td>
+          </tr>
+      {% endfor %}
+    </table>
+  {% elif step == 'view_recipe' %}
+    <h1>{{ recipe.name }}</h1>
+    <h2>Cuisine: {{ recipe.cuisine_name }}</h2>
+    <body>
+      <form action="{{ url_for('recipes') }}" method="post">
+        Cookware Needed:
+        <ul>
+          {% for gear in recipe.cookware %}
+            <li>{{gear}}</li>
+          {% endfor %}
+        </ul>
+        Ingredients Needed:
+        <ul>
+          {% for item in recipe.ingredients %}
+            <li>{{item}}</li>
+          {% endfor %}
+        </ul>
+        <p>Instructions: {{recipe.instructions}}</p>
+        <input type="hidden" name="postid" value="{{recipe.recipe_id}}">
+        <input type="hidden" name="step" value="choose_cookbook">
+        <input type="submit" value="Add recipe to cookbook">
+      </form>
+    </body>
+  {% elif step == 'choose_cookbook' %}
+    <h1>Add recipe to cookbook:</h1>
+    <form action="{{ url_for('recipes') }}" method="post">
+      <table border="1">
+        <tr><td></td><td>Name</td></tr>
+        {% for entry in cookbooks %}
+          <tr>
+            <td>
+              <input type="hidden" name="cookbook_id" value={{entry.cookbook_id}}>
+              <input type="submit" value="Add">
+              <input type="hidden" name="step" value="add_recipe">
+              <input type="hidden" name="postid" value="{{recipe.recipe_id}}">
+            </td>
+            <td>{{ entry.cookbook_name }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </form>
+  {% elif step == 'add_recipe' %}
+    <p style="color: #464141; font-size: 20px;">Recipe has been added to cookbook.</p>
+  {% endif %}
+</table>

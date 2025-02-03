@@ -1,0 +1,68 @@
+{% if ingredients %}
+<table border="1">
+  <tr>
+    <td><strong>Action</strong></td>
+    <td><strong>Name</strong></td>
+  </tr>
+  {% for ingredient in ingredients %}
+    <tr>
+      <td>
+        <form action="{{ url_for('ingredients') }}" method="post">
+          <input type="hidden" name="postid" value="{{ingredient.ingredient_id}}">
+          <input type="hidden" name="step" value="view_ingredient">
+          <input type="submit" value="View Ingredient">
+        </form>
+      </td>
+      <td>{{ ingredient.ingredient_name }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No ingredients found.</p>
+{% endif %}
+
+{% if step == 'view_ingredient' %}
+<h1 style="text-align: center">{{ ingredient.ingredient_name }}</h1>
+<table border="1">
+  <tr>
+    <th>Serving Size (g)</th>
+    <td>{{ ingredient.serving_size_g }}</td>
+  </tr>
+  <tr>
+    <th>Calories</th>
+    <td>{{ ingredient.calories }}</td>
+  </tr>
+  <tr>
+    <th>Total Fat (g)</th>
+    <td>{{ ingredient.total_fat_g }}</td>
+  </tr>
+  <tr>
+    <th>Saturated Fat (g)</th>
+    <td>{{ ingredient.saturated_fat_g }}</td>
+  </tr>
+  <tr>
+    <th>Cholesterol (mg)</th>
+    <td>{{ ingredient.cholesterol_mg }}</td>
+  </tr>
+  <tr>
+    <th>Sodium (mg)</th>
+    <td>{{ ingredient.sodium_mg }}</td>
+  </tr>
+  <tr>
+    <th>Carbs (g)</th>
+    <td>{{ ingredient.carbs_g }}</td>
+  </tr>
+  <tr>
+    <th>Fiber (g)</th>
+    <td>{{ ingredient.fiber_g }}</td>
+  </tr>
+  <tr>
+    <th>Sugars (g)</th>
+    <td>{{ ingredient.sugars_g }}</td>
+  </tr>
+  <tr>
+    <th>Protein (g)</th>
+    <td>{{ ingredient.protein_g }}</td>
+  </tr>
+</table>
+{% endif %}
