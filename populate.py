@@ -110,8 +110,8 @@ def populate_ingredients():
 
 
 def populate_recipes():
-  json_data = open('recipes_raw_nosource_ar.json', "r")
-  parsed_json = json.loads(json_data.read())
+  with open('recipes_raw_nosource_ar.json', "r") as json_data:
+    parsed_json = json.loads(json_data.read())
   conn = connect_db()
   cursor = conn.cursor()
 
@@ -139,8 +139,8 @@ def populate_recipes():
 
 ##plan to remove below function if populate recipes works
 def populate_recipes_ingredients():
-  json_data = open('recipes_raw_nosource_ar.json', "r")
-  parsed_json = json.loads(json_data.read())
+  with open('recipes_raw_nosource_ar.json', "r") as json_data:
+    parsed_json = json.loads(json_data.read())
   conn = connect_db()
   cursor = conn.cursor()
 
