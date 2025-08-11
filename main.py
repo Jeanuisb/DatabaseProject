@@ -101,7 +101,7 @@ def register():
       return render_template('register.html', error='User already exists')
 
     cur.execute(
-        f"insert into Users (name, password) values ('{username}', '{pwd}')")
+        "insert into Users (name, password) values (?, ?)", (username, pwd, ))
     conn.commit()
     cur.close()
 
